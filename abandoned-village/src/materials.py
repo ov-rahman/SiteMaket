@@ -316,15 +316,24 @@ def rubble(c, x, y, n, rng, spread=(10, 4), pal=STONE, sizes=(1, 3)):
 
 
 def stone(c, x, y, w, h, rng, pal=STONE, outline_col=K[2]):
-    """A single small rounded rock with highlight."""
-    m = ellipse_mask(c.w, c.h, x + w / 2, y + h / 2, w / 2 + 0.3, h / 2 + 0.3)
-    if not m.any():
-        c.set(x, y, pal["light"])
-        return
-    c.px[dilate(m) & ~m] = outline_col
-    c.px[m] = pal["base"]
-    tl = m & ~shift(m, 0, 1)
-    c.px[tl] = pal["light"]
-    c.px[m & ~shift(m, 0, 1) & ~shift(m, 1, 0)] = pal["hi"]
-    br = m & ~shift(m, 0, -1)
-    c.px[br] = pal["dark"]
+    """A small angular stone: lit top, dark underside, shadow to the lower right."""
+    x, y, w, h = int(x), int(y), max(1, int(w)), max(1, int(h))
+    trim = w >= 4 and h >= 3
+    for yy in range(h):
+        for xx in range(w):
+            if trim and (xx, yy) in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)):
+                continue
+            if yy == 0 or (trim and yy == 1 and xx in (0, w - 1)):
+                col = pal["hi"] if xx <= w // 3 else pal["light"]
+            elif yy == h - 1 and h > 1:
+                col = pal["dark"]
+            else:
+                col = pal["base"]
+            c.set(x + xx, y + yy, col)
+    # contact shadow: under and right of the stone, only on empty pixels
+    for xx in range(1 if trim else 0, w + 1):
+        if c.get(x + xx, y + h) < 0 or c.get(x + xx, y + h) in (K[6], K[7], K[8]):
+            c.set(x + xx, y + h, outline_col)
+    for yy in range(1, h):
+        if c.get(x + w, y + yy) < 0:
+            c.set(x + w, y + yy, outline_col)

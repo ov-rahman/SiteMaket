@@ -271,12 +271,12 @@ def church():
     # far wall of the nave faintly visible through the hole
     for yy in range(112, 170, 6):
         c.px[yy, :][interior[yy]] = K[3]
-    # heap of fallen masonry inside
-    heap = poly_mask(W, H, [(21, 177), (22, 166), (27, 162), (33, 165), (37, 172), (38, 177)]) & interior
-    c.px[heap] = K[8]
-    hr = Rng(333)
-    for _ in range(9):
-        M.stone(c, hr.randint(22, 34), hr.randint(163, 174), hr.randint(2, 4), hr.randint(2, 3), hr, M.STONE)
+    # heap of fallen masonry inside: dark mound with loose ashlar blocks on it
+    heap = poly_mask(W, H, [(21, 177), (23, 168), (28, 163), (34, 166), (38, 172), (39, 177)]) & interior
+    c.px[heap] = K[4]
+    c.px[heap & ~shift(heap, 0, 1)] = K[6]
+    for (bx, by, bw, bh) in ((24, 168, 5, 3), (30, 165, 4, 3), (27, 172, 6, 3), (33, 170, 4, 3), (22, 174, 4, 2)):
+        M.stone(c, bx, by, bw, bh, None, M.STONE_SHADE)
     # jagged masonry lip around the hole
     lip = dilate(interior, True) & ~interior & orig_wall & ~biteL
     c.px[lip] = K[11]

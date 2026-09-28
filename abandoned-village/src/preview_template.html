@@ -258,10 +258,19 @@
       if (dialog) document.getElementById('dialog-text').textContent = dialog;
     }
 
+    // ---------------------------------------------------------------- ambient wisps
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const wisps = still ? [] : Array.from({ length: 12 }, () => ({ x: 40 + rnd() * (MW - 80), y: 170 + rnd() * (MH - 230), p: rnd() * 6.28 }));
+    let clock = 0;
+
     // ---------------------------------------------------------------- loop
     let last = performance.now();
     function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      clock += dt;
+      for (const w of wisps) { w.x += Math.sin(clock * 0.31 + w.p) * dt * 5; w.y += Math.cos(clock * 0.23 + w.p * 1.7) * dt * 3.5; }
       update(dt); draw();
       requestAnimationFrame(frame);
     }
@@ -317,6 +326,15 @@
       } });
       list.sort((a, b) => a.sy - b.sy);
       for (const it of list) it.draw();
+      for (const w of wisps) {
+        const a = 0.25 + 0.3 * Math.sin(clock * 1.3 + w.p * 3);
+        if (a <= 0) continue;
+        const x = Math.round(w.x - camX), y = Math.round(w.y - camY);
+        v.fillStyle = `rgba(162, 172, 214, ${(a * 0.35).toFixed(3)})`;
+        v.fillRect(x - 1, y, 3, 1); v.fillRect(x, y - 1, 1, 3);
+        v.fillStyle = `rgba(210, 216, 245, ${a.toFixed(3)})`;
+        v.fillRect(x, y, 1, 1);
+      }
       if (opt.col) {
         v.fillStyle = 'rgba(198, 90, 120, 0.28)'; v.strokeStyle = 'rgba(198, 90, 120, 0.9)';
         for (const s of solids) { v.fillRect(s.x - camX, s.y - camY, s.w, s.h); }
