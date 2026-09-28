@@ -1,0 +1,627 @@
+{
+ "map": "abandoned_village.tmx",
+ "tile_size": 16,
+ "width": 40,
+ "height": 30,
+ "player_start": {
+  "x": 320,
+  "y": 420
+ },
+ "objects": [
+  {
+   "name": "tree_thin",
+   "sprite": "sprites/tree_thin.png",
+   "x": 576,
+   "y": 32,
+   "w": 32,
+   "h": 96,
+   "sort_y": 126,
+   "collision": [
+    588,
+    120,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "tree_small",
+   "sprite": "sprites/tree_small.png",
+   "x": 160,
+   "y": 96,
+   "w": 48,
+   "h": 80,
+   "sort_y": 174,
+   "collision": [
+    179,
+    168,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "tree_tall",
+   "sprite": "sprites/tree_tall.png",
+   "x": 16,
+   "y": 48,
+   "w": 64,
+   "h": 144,
+   "sort_y": 190,
+   "collision": [
+    43,
+    184,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "tree_crooked",
+   "sprite": "sprites/tree_crooked.png",
+   "x": 432,
+   "y": 64,
+   "w": 64,
+   "h": 128,
+   "sort_y": 190,
+   "collision": [
+    461,
+    184,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "church",
+   "sprite": "sprites/church.png",
+   "x": 240,
+   "y": 0,
+   "w": 176,
+   "h": 224,
+   "sort_y": 198,
+   "collision": [
+    254,
+    150,
+    150,
+    48
+   ]
+  },
+  {
+   "name": "house_a",
+   "sprite": "sprites/house_a.png",
+   "x": 48,
+   "y": 96,
+   "w": 112,
+   "h": 112,
+   "sort_y": 202,
+   "collision": [
+    56,
+    166,
+    96,
+    36
+   ]
+  },
+  {
+   "name": "house_b",
+   "sprite": "sprites/house_b.png",
+   "x": 496,
+   "y": 96,
+   "w": 112,
+   "h": 112,
+   "sort_y": 202,
+   "collision": [
+    504,
+    166,
+    96,
+    36
+   ]
+  },
+  {
+   "name": "fence_left",
+   "sprite": "sprites/fence_left.png",
+   "x": 112,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    112,
+    200,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_a",
+   "sprite": "sprites/fence_mid_a.png",
+   "x": 128,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    128,
+    200,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_b",
+   "sprite": "sprites/fence_mid_b.png",
+   "x": 144,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    144,
+    200,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_broken",
+   "sprite": "sprites/fence_broken.png",
+   "x": 160,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    160,
+    200,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_right",
+   "sprite": "sprites/fence_right.png",
+   "x": 176,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    176,
+    200,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "stump",
+   "sprite": "sprites/stump.png",
+   "x": 192,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    194,
+    198,
+    12,
+    8
+   ]
+  },
+  {
+   "name": "grave_0",
+   "sprite": "sprites/grave_0.png",
+   "x": 208,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    211,
+    198,
+    10,
+    8
+   ]
+  },
+  {
+   "name": "fence_post",
+   "sprite": "sprites/fence_post.png",
+   "x": 480,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 206,
+   "collision": [
+    485,
+    200,
+    6,
+    7
+   ]
+  },
+  {
+   "name": "barrel_open",
+   "sprite": "sprites/barrel_open.png",
+   "x": 512,
+   "y": 176,
+   "w": 16,
+   "h": 32,
+   "sort_y": 207,
+   "collision": [
+    513,
+    198,
+    14,
+    9
+   ]
+  },
+  {
+   "name": "grave_2",
+   "sprite": "sprites/grave_2.png",
+   "x": 224,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 222,
+   "collision": [
+    227,
+    214,
+    10,
+    8
+   ]
+  },
+  {
+   "name": "fence_left",
+   "sprite": "sprites/fence_left.png",
+   "x": 560,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 222,
+   "collision": [
+    560,
+    216,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_c",
+   "sprite": "sprites/fence_mid_c.png",
+   "x": 576,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 222,
+   "collision": [
+    576,
+    216,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_a",
+   "sprite": "sprites/fence_mid_a.png",
+   "x": 592,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 222,
+   "collision": [
+    592,
+    216,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_right",
+   "sprite": "sprites/fence_right.png",
+   "x": 608,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 222,
+   "collision": [
+    608,
+    216,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "barrel_broken",
+   "sprite": "sprites/barrel_broken.png",
+   "x": 528,
+   "y": 192,
+   "w": 16,
+   "h": 32,
+   "sort_y": 223,
+   "collision": [
+    528,
+    214,
+    15,
+    9
+   ]
+  },
+  {
+   "name": "signpost",
+   "sprite": "sprites/signpost.png",
+   "x": 560,
+   "y": 240,
+   "w": 32,
+   "h": 48,
+   "sort_y": 286,
+   "collision": [
+    572,
+    280,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "well",
+   "sprite": "sprites/well.png",
+   "x": 176,
+   "y": 240,
+   "w": 48,
+   "h": 64,
+   "sort_y": 300,
+   "collision": [
+    182,
+    280,
+    36,
+    20
+   ]
+  },
+  {
+   "name": "statue",
+   "sprite": "sprites/statue.png",
+   "x": 384,
+   "y": 240,
+   "w": 48,
+   "h": 80,
+   "sort_y": 317,
+   "collision": [
+    390,
+    298,
+    36,
+    20
+   ]
+  },
+  {
+   "name": "tree_thin",
+   "sprite": "sprites/tree_thin.png",
+   "x": 16,
+   "y": 240,
+   "w": 32,
+   "h": 96,
+   "sort_y": 334,
+   "collision": [
+    28,
+    328,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "fence_post",
+   "sprite": "sprites/fence_post.png",
+   "x": 32,
+   "y": 368,
+   "w": 16,
+   "h": 32,
+   "sort_y": 398,
+   "collision": [
+    37,
+    392,
+    6,
+    7
+   ]
+  },
+  {
+   "name": "tree_small",
+   "sprite": "sprites/tree_small.png",
+   "x": 176,
+   "y": 336,
+   "w": 48,
+   "h": 80,
+   "sort_y": 414,
+   "collision": [
+    195,
+    408,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "house_c",
+   "sprite": "sprites/house_c.png",
+   "x": 48,
+   "y": 320,
+   "w": 128,
+   "h": 112,
+   "sort_y": 426,
+   "collision": [
+    60,
+    396,
+    94,
+    30
+   ]
+  },
+  {
+   "name": "fence_left",
+   "sprite": "sprites/fence_left.png",
+   "x": 160,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 430,
+   "collision": [
+    160,
+    424,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_b",
+   "sprite": "sprites/fence_mid_b.png",
+   "x": 176,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 430,
+   "collision": [
+    176,
+    424,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_broken",
+   "sprite": "sprites/fence_broken.png",
+   "x": 192,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 430,
+   "collision": [
+    192,
+    424,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_right",
+   "sprite": "sprites/fence_right.png",
+   "x": 208,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 430,
+   "collision": [
+    208,
+    424,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "tree_medium",
+   "sprite": "sprites/tree_medium.png",
+   "x": 592,
+   "y": 336,
+   "w": 48,
+   "h": 96,
+   "sort_y": 430,
+   "collision": [
+    612,
+    424,
+    8,
+    6
+   ]
+  },
+  {
+   "name": "barrel_closed",
+   "sprite": "sprites/barrel_closed.png",
+   "x": 32,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 431,
+   "collision": [
+    33,
+    422,
+    14,
+    9
+   ]
+  },
+  {
+   "name": "crate",
+   "sprite": "sprites/crate.png",
+   "x": 592,
+   "y": 400,
+   "w": 16,
+   "h": 32,
+   "sort_y": 431,
+   "collision": [
+    593,
+    420,
+    14,
+    11
+   ]
+  },
+  {
+   "name": "house_d",
+   "sprite": "sprites/house_d.png",
+   "x": 448,
+   "y": 320,
+   "w": 144,
+   "h": 128,
+   "sort_y": 442,
+   "collision": [
+    456,
+    406,
+    126,
+    36
+   ]
+  },
+  {
+   "name": "fence_left",
+   "sprite": "sprites/fence_left.png",
+   "x": 384,
+   "y": 416,
+   "w": 16,
+   "h": 32,
+   "sort_y": 446,
+   "collision": [
+    384,
+    440,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_mid_a",
+   "sprite": "sprites/fence_mid_a.png",
+   "x": 400,
+   "y": 416,
+   "w": 16,
+   "h": 32,
+   "sort_y": 446,
+   "collision": [
+    400,
+    440,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "fence_right",
+   "sprite": "sprites/fence_right.png",
+   "x": 416,
+   "y": 416,
+   "w": 16,
+   "h": 32,
+   "sort_y": 446,
+   "collision": [
+    416,
+    440,
+    16,
+    7
+   ]
+  },
+  {
+   "name": "barrel_open",
+   "sprite": "sprites/barrel_open.png",
+   "x": 432,
+   "y": 416,
+   "w": 16,
+   "h": 32,
+   "sort_y": 447,
+   "collision": [
+    433,
+    438,
+    14,
+    9
+   ]
+  }
+ ]
+}

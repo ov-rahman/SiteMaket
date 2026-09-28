@@ -1,0 +1,375 @@
+<title>Заброшенная деревня</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Alegreya+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --void: #03040a;
+    --panel: #0a0e22;
+    --panel-2: #0f1430;
+    --line: #1f2750;
+    --ink: #d3d8f3;
+    --muted: #8189bd;
+    --moon: #a2acd6;
+    --accent: #c65a78;
+    --accent-ink: #1a0a14;
+    --display: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+  }
+  html, body { background: var(--void); color: var(--ink); }
+  body { font-family: var(--body); font-size: 16px; line-height: 1.5; margin: 0; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 40px; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 6vw, 56px); line-height: 1; margin: 0;
+       color: var(--moon); letter-spacing: 0.01em; text-wrap: balance; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 26px; margin: 0; color: var(--moon); text-wrap: balance; }
+  .lede { margin: 0; color: var(--muted); max-width: 62ch; }
+  .lede b { color: var(--ink); font-weight: 500; }
+  .label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------------- stage */
+  .stage-card { display: grid; gap: 12px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .seg button { font: 600 13px/1 var(--mono); color: var(--muted); background: var(--panel); border: 0; padding: 9px 12px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--moon); color: var(--void); }
+  .toggle { display: inline-flex; gap: 7px; align-items: center; font: 13px/1 var(--mono); color: var(--muted); cursor: pointer; user-select: none; }
+  .toggle input { accent-color: var(--accent); width: 15px; height: 15px; margin: 0; }
+  button:focus-visible, input:focus-visible, canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .stage { position: relative; background: #000; border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+           aspect-ratio: 4 / 3; max-width: 100%; }
+  #game { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; touch-action: none; }
+  .dialog { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: min(560px, calc(100% - 28px));
+            background: var(--void); border: 3px solid var(--moon); box-shadow: 0 0 0 3px var(--void);
+            padding: 12px 16px; font-family: var(--display); font-size: clamp(15px, 2.2vw, 19px); line-height: 1.35; color: var(--ink); }
+  .dialog small { display: block; margin-top: 6px; font: 11px/1 var(--mono); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .readout { position: absolute; left: 10px; top: 10px; font: 12px/1.3 var(--mono); color: var(--moon);
+             background: rgba(3, 4, 10, 0.78); padding: 6px 8px; border-radius: 4px; pointer-events: none; }
+  .pad { position: absolute; right: 12px; bottom: 12px; display: none; grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 4px; }
+  .pad button { background: rgba(10, 14, 34, 0.72); border: 1px solid var(--line); color: var(--moon); font: 600 18px/1 var(--mono);
+                border-radius: 8px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pad .act { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  @media (pointer: coarse) { .pad { display: grid; } }
+  .keys { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; color: var(--muted); font-size: 14px; }
+  kbd { font: 600 12px/1 var(--mono); color: var(--ink); background: var(--panel-2); border: 1px solid var(--line);
+        border-bottom-width: 2px; border-radius: 4px; padding: 3px 6px; }
+
+  /* ---------------- tileset */
+  .split { display: grid; gap: 14px; }
+  .sheet-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+  .scroller { overflow: auto; max-height: 560px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+  #atlas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: crosshair; }
+  .tile-info { font: 13px/1.4 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; min-height: 1.4em; }
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 24px; margin: 0; padding: 0; list-style: none; }
+  .legend li { display: grid; gap: 2px; }
+  .legend b { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--moon); font-weight: 600; }
+  .legend span { color: var(--muted); font-size: 14px; }
+
+  /* ---------------- palette */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 4px; }
+  .sw { aspect-ratio: 1; border-radius: 3px; border: 1px solid rgba(255, 255, 255, 0.05); position: relative; }
+  .sw:hover::after, .sw:focus-visible::after { content: attr(data-hex); position: absolute; left: 50%; top: -24px; transform: translateX(-50%);
+      font: 11px/1 var(--mono); background: var(--ink); color: var(--void); padding: 4px 5px; border-radius: 3px; white-space: nowrap; z-index: 2; }
+  footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer code { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="label">Локация · 40 × 30 тайлов · 16 px</span>
+    <h1>Заброшенная деревня</h1>
+    <p class="lede">Ночная деревня у кромки соснового леса: часовня с обвалившейся кровлей, четыре пустых дома, колодец и безликая статуя.
+      Всё на экране собрано из <b>одного тайлсета</b> — пройдитесь и посмотрите вблизи.</p>
+  </header>
+
+  <section class="stage-card" aria-label="Прогулка по локации">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Режим камеры">
+        <button id="mode-walk" aria-pressed="true">Прогулка</button>
+        <button id="mode-map" aria-pressed="false">Вся карта</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="opt-grid"> Сетка 16 px</label>
+      <label class="toggle"><input type="checkbox" id="opt-col"> Коллизии</label>
+      <label class="toggle"><input type="checkbox" id="opt-hero" checked> Персонаж</label>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="game" tabindex="0" aria-label="Игровое поле: управление стрелками или WASD"></canvas>
+      <div class="readout" id="readout" hidden></div>
+      <div class="dialog" id="dialog" hidden><span id="dialog-text"></span><small>E / пробел — закрыть</small></div>
+      <div class="pad" aria-hidden="true">
+        <span></span><button data-dir="up">▲</button><span></span>
+        <button data-dir="left">◀</button><button class="act" data-act="1">E</button><button data-dir="right">▶</button>
+        <span></span><button data-dir="down">▼</button><span></span>
+      </div>
+    </div>
+    <p class="keys"><span><kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> / <kbd>WASD</kbd> идти</span>
+      <span><kbd>Shift</kbd> бежать</span><span><kbd>E</kbd> / <kbd>Пробел</kbd> осмотреть</span>
+      <span>Подойдите к колодцу, статуе, указателю или двери часовни.</span></p>
+  </section>
+
+  <section class="split" aria-labelledby="ts-title">
+    <div class="sheet-head">
+      <h2 id="ts-title">Тайлсет</h2>
+      <span class="label" id="ts-size"></span>
+    </div>
+    <div class="scroller"><canvas id="atlas"></canvas></div>
+    <div class="tile-info" id="tile-info">Наведите на тайл, чтобы увидеть его номер и объект.</div>
+    <ul class="legend">
+      <li><b>Террейн · 8 рядов</b><span>Wang-переходы по углам: пустота, трава, мох, тропа. Каждый блок 4×4 бесшовен сам с собой, по 3 варианта.</span></li>
+      <li><b>Декор</b><span>Пучки травы, камешки, валуны, обломки досок и черепицы.</span></li>
+      <li><b>Пропсы</b><span>Забор (концы, середины, сломанный, столб), бочки, пень, ящик, надгробия, колонна, указатель, колодец, статуя.</span></li>
+      <li><b>Деревья</b><span>Шесть мёртвых деревьев разной высоты и формы.</span></li>
+      <li><b>Здания</b><span>Часовня 11×14 и четыре дома, каждый разрушен по-своему.</span></li>
+      <li><b>Лес</b><span>Фон из трёх слоёв елей: два варианта, тайлятся по горизонтали, торцы уходят в темноту.</span></li>
+    </ul>
+  </section>
+
+  <section class="split" aria-labelledby="pal-title">
+    <div class="sheet-head">
+      <h2 id="pal-title">Палитра «Moonlit Indigo»</h2>
+      <span class="label" id="pal-size"></span>
+    </div>
+    <div class="swatches" id="swatches"></div>
+  </section>
+
+  <footer>Файлы для движка лежат рядом: <code>tileset/abandoned_village.tsx</code>, <code>maps/abandoned_village.tmx</code>,
+    <code>maps/abandoned_village.json</code>, спрайты объектов в <code>sprites/</code>. Персонаж — оригинальный, 4 направления × 3 кадра.</footer>
+</div>
+
+<script id="map-data" type="application/json">/*__MAP_DATA__*/</script>
+<script id="img-data" type="application/json">/*__IMG_DATA__*/</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById('map-data').textContent);
+  const IMG = JSON.parse(document.getElementById('img-data').textContent);
+  const T = D.tile, MW = D.w * T, MH = D.h * T;
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const load = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+
+  Promise.all([load(IMG.atlas), load(IMG.hero), ...Object.entries(IMG.sprites).map(([k, v]) => load(v).then((im) => [k, im]))])
+    .then(([atlas, hero, ...sprites]) => start(atlas, hero, Object.fromEntries(sprites)));
+
+  function start(atlas, hero, SPR) {
+    // ---------------------------------------------------------------- static ground
+    const ground = document.createElement('canvas');
+    ground.width = MW; ground.height = MH;
+    const g = ground.getContext('2d');
+    for (const name of ['Ground', 'Decor', 'Forest']) {
+      const a = D.layers[name];
+      for (let i = 0; i < a.length; i++) {
+        const id = a[i];
+        if (id < 0) continue;
+        const sx = (id % D.atlasCols) * T, sy = Math.floor(id / D.atlasCols) * T;
+        g.drawImage(atlas, sx, sy, T, T, (i % D.w) * T, Math.floor(i / D.w) * T, T, T);
+      }
+    }
+
+    // ---------------------------------------------------------------- state
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const view = document.createElement('canvas');
+    const v = view.getContext('2d');
+    const P = { x: D.start[0], y: D.start[1], dir: 'up', t: 0, moving: false };
+    const DIRROW = { down: 0, left: 1, right: 2, up: 3 };
+    const keys = new Set();
+    let mode = store.get('village.mode') || 'walk';
+    let dialog = null;
+    const opt = { grid: false, col: false, hero: true };
+
+    const solids = D.solids.map(([x, y, w, h]) => ({ x, y, w, h }));
+    const hits = (bx, by, bw, bh) => {
+      if (bx < 0 || by < 0 || bx + bw > MW || by + bh > MH) return true;
+      return solids.some((s) => bx < s.x + s.w && bx + bw > s.x && by < s.y + s.h && by + bh > s.y);
+    };
+    const feet = (x, y) => [x - 5, y - 5, 10, 5];
+
+    // ---------------------------------------------------------------- sizing
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.round(r.width * dpr));
+      canvas.height = Math.max(1, Math.round(r.height * dpr));
+    }
+    new ResizeObserver(resize).observe(canvas);
+    resize();
+
+    // ---------------------------------------------------------------- input
+    const DIRKEYS = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
+    window.addEventListener('keydown', (e) => {
+      if (e.target instanceof HTMLInputElement) return;
+      if (DIRKEYS[e.code]) { keys.add(DIRKEYS[e.code]); if (document.activeElement === canvas || mode === 'walk') e.preventDefault(); }
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.add('run');
+      if ((e.code === 'KeyE' || e.code === 'Space' || e.code === 'Enter') && document.activeElement !== document.getElementById('mode-map')) {
+        if (e.code === 'Space') e.preventDefault();
+        act();
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      if (DIRKEYS[e.code]) keys.delete(DIRKEYS[e.code]);
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.delete('run');
+    });
+    window.addEventListener('blur', () => keys.clear());
+    document.querySelectorAll('.pad [data-dir]').forEach((b) => {
+      const d = b.dataset.dir;
+      b.addEventListener('pointerdown', (e) => { e.preventDefault(); keys.add(d); b.setPointerCapture(e.pointerId); });
+      const up = () => keys.delete(d);
+      b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+    });
+    document.querySelector('.pad .act').addEventListener('pointerdown', (e) => { e.preventDefault(); act(); });
+
+    const setMode = (m) => {
+      mode = m; store.set('village.mode', m);
+      document.getElementById('mode-walk').setAttribute('aria-pressed', String(m === 'walk'));
+      document.getElementById('mode-map').setAttribute('aria-pressed', String(m === 'map'));
+    };
+    document.getElementById('mode-walk').onclick = () => { setMode('walk'); canvas.focus(); };
+    document.getElementById('mode-map').onclick = () => setMode('map');
+    setMode(mode);
+    for (const k of ['grid', 'col', 'hero']) {
+      const el = document.getElementById('opt-' + k);
+      el.checked = opt[k];
+      el.onchange = () => { opt[k] = el.checked; };
+    }
+    canvas.addEventListener('pointerdown', () => canvas.focus());
+
+    // ---------------------------------------------------------------- interactions
+    function act() {
+      if (dialog) { dialog = null; showDialog(); return; }
+      const [fx, fy] = [P.x + { left: -10, right: 10, up: 0, down: 0 }[P.dir], P.y + { up: -10, down: 8, left: -2, right: -2 }[P.dir]];
+      let best = null, bd = 1e9;
+      for (const it of D.interact) {
+        const [x, y, w, h] = it.rect;
+        const cx = Math.max(x, Math.min(fx, x + w)), cy = Math.max(y, Math.min(fy, y + h));
+        const d = Math.hypot(cx - fx, cy - fy);
+        if (d < 14 && d < bd) { bd = d; best = it; }
+      }
+      if (best) { dialog = best.text; showDialog(); }
+    }
+    function showDialog() {
+      const box = document.getElementById('dialog');
+      box.hidden = !dialog;
+      if (dialog) document.getElementById('dialog-text').textContent = dialog;
+    }
+
+    // ---------------------------------------------------------------- loop
+    let last = performance.now();
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      update(dt); draw();
+      requestAnimationFrame(frame);
+    }
+    function update(dt) {
+      let dx = 0, dy = 0;
+      if (!dialog) {
+        if (keys.has('left')) dx -= 1; if (keys.has('right')) dx += 1;
+        if (keys.has('up')) dy -= 1; if (keys.has('down')) dy += 1;
+      }
+      P.moving = dx !== 0 || dy !== 0;
+      if (P.moving) {
+        if (dy < 0) P.dir = 'up'; else if (dy > 0) P.dir = 'down';
+        if (dx < 0 && dy === 0) P.dir = 'left'; else if (dx > 0 && dy === 0) P.dir = 'right';
+        const sp = (keys.has('run') ? 96 : 58) * dt / (dx && dy ? Math.SQRT2 : 1);
+        const nx = P.x + dx * sp;
+        if (!hits(...feet(nx, P.y))) P.x = nx;
+        const ny = P.y + dy * sp;
+        if (!hits(...feet(P.x, ny))) P.y = ny;
+        P.t += dt * (keys.has('run') ? 1.6 : 1);
+      } else P.t = 0;
+    }
+    function heroFrame() {
+      if (!P.moving) return 0;
+      const f = Math.floor(P.t * 8) % 4;
+      return [0, 1, 0, 2][f];
+    }
+    function draw() {
+      const cw = canvas.width, ch = canvas.height;
+      const dpr = window.devicePixelRatio || 1;
+      let zoom, vw, vh;
+      if (mode === 'map') { zoom = Math.min(cw / MW, ch / MH); vw = MW; vh = MH; }
+      else {
+        // integer device-pixel zoom so every game pixel stays square and crisp
+        zoom = Math.max(1, Math.round(Math.max(2, Math.round(cw / dpr / 330)) * dpr));
+        vw = Math.ceil(cw / zoom); vh = Math.ceil(ch / zoom);
+      }
+      if (view.width !== vw || view.height !== vh) { view.width = vw; view.height = vh; }
+      let camX = 0, camY = 0;
+      if (mode === 'walk') {
+        camX = Math.round(Math.max(0, Math.min(MW - vw, P.x - vw / 2)));
+        camY = Math.round(Math.max(0, Math.min(MH - vh, P.y - 12 - vh / 2)));
+        if (vw > MW) camX = Math.round((MW - vw) / 2);
+        if (vh > MH) camY = Math.round((MH - vh) / 2);
+      }
+      v.imageSmoothingEnabled = false;
+      v.fillStyle = '#03040a'; v.fillRect(0, 0, vw, vh);
+      v.drawImage(ground, -camX, -camY);
+      // y-sorted sprites + hero
+      const list = D.objects.map((o) => ({ sy: o.sy, draw: () => { const im = SPR[o.s]; if (im) v.drawImage(im, o.x - camX, o.y - camY); } }));
+      if (opt.hero) list.push({ sy: P.y + 0.5, draw: () => {
+        const fx = heroFrame() * 16, fy = DIRROW[P.dir] * 24;
+        v.drawImage(hero, fx, fy, 16, 24, Math.round(P.x) - 8 - camX, Math.round(P.y) - 24 - camY, 16, 24);
+      } });
+      list.sort((a, b) => a.sy - b.sy);
+      for (const it of list) it.draw();
+      if (opt.col) {
+        v.fillStyle = 'rgba(198, 90, 120, 0.28)'; v.strokeStyle = 'rgba(198, 90, 120, 0.9)';
+        for (const s of solids) { v.fillRect(s.x - camX, s.y - camY, s.w, s.h); }
+        const [bx, by, bw, bh] = feet(P.x, P.y);
+        v.fillStyle = 'rgba(162, 172, 214, 0.7)'; v.fillRect(bx - camX, by - camY, bw, bh);
+      }
+      if (opt.grid) {
+        v.fillStyle = 'rgba(162, 172, 214, 0.16)';
+        for (let x = -camX % T; x < vw; x += T) v.fillRect(x, 0, 1, vh);
+        for (let y = -camY % T; y < vh; y += T) v.fillRect(0, y, vw, 1);
+      }
+      ctx.imageSmoothingEnabled = false;
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cw, ch);
+      const dw = Math.round(vw * zoom), dh = Math.round(vh * zoom);
+      ctx.drawImage(view, Math.round((cw - dw) / 2), Math.round((ch - dh) / 2), dw, dh);
+    }
+    requestAnimationFrame(frame);
+
+    // ---------------------------------------------------------------- tileset viewer
+    const ac = document.getElementById('atlas');
+    const AS = 2;
+    ac.width = atlas.width * AS; ac.height = atlas.height * AS;
+    const a2 = ac.getContext('2d');
+    a2.imageSmoothingEnabled = false;
+    for (let y = 0; y < ac.height; y += 16) for (let x = 0; x < ac.width; x += 16) {
+      a2.fillStyle = ((x + y) / 16) % 2 ? '#0d1128' : '#0a0e22'; a2.fillRect(x, y, 16, 16);
+    }
+    a2.drawImage(atlas, 0, 0, ac.width, ac.height);
+    a2.fillStyle = 'rgba(162, 172, 214, 0.10)';
+    for (let x = 0; x < ac.width; x += T * AS) a2.fillRect(x, 0, 1, ac.height);
+    for (let y = 0; y < ac.height; y += T * AS) a2.fillRect(0, y, ac.width, 1);
+    const rows = atlas.height / T;
+    document.getElementById('ts-size').textContent = `${D.atlasCols} × ${rows} тайлов · ${atlas.width} × ${atlas.height} px`;
+    const info = document.getElementById('tile-info');
+    ac.addEventListener('pointermove', (e) => {
+      const r = ac.getBoundingClientRect();
+      const col = Math.floor((e.clientX - r.left) / (T * AS)), row = Math.floor((e.clientY - r.top) / (T * AS));
+      const id = row * D.atlasCols + col;
+      let owner = '';
+      for (const [n, [c0, r0, w, h]] of Object.entries(D.blocks)) {
+        if (col >= c0 && col < c0 + w && row >= r0 && row < r0 + h) { owner = D.names[n] || n; break; }
+      }
+      info.textContent = `тайл #${id}  ·  колонка ${col}, ряд ${row}${owner ? '  ·  ' + owner : ''}`;
+    });
+
+    // ---------------------------------------------------------------- palette
+    const sw = document.getElementById('swatches');
+    D.palette.forEach((hex) => {
+      const d = document.createElement('div');
+      d.className = 'sw'; d.style.background = hex; d.dataset.hex = hex; d.tabIndex = 0; d.title = hex;
+      sw.appendChild(d);
+    });
+    document.getElementById('pal-size').textContent = `${D.palette.length} цветов`;
+  }
+})();
+</script>
